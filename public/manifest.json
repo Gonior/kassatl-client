@@ -1,0 +1,33 @@
+{
+    "theme_color": "#5B31CE",
+    "background_color": "#5B31CE",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "/",
+    "orientation": "portrait",
+    "name": "JXI Penerjemah",
+    "short_name": "JXI",
+    "description": "Aplikasi ini untuk menerjemahkan bahasa Jepang - Indonesia memanfaatkan teknologi kamera",
+    "icons": [
+        {
+            "src": "/icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-256x256.png",
+            "sizes": "256x256",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-384x384.png",
+            "sizes": "384x384",
+            "type": "image/png"
+        },
+        {
+            "src": "/icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}

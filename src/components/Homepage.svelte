@@ -2,13 +2,14 @@
     import fx from 'glfx-es6'
 	import RangeSlider from "svelte-range-slider-pips";
 	import Crop from './Crop.svelte'
-    import {fly, slide} from "svelte/transition"
+    import {fade, fly, slide} from "svelte/transition"
     import {clickOutside} from '../lib/clickOutside'
     import SkeletonModal from './SkeletonModal.svelte'
     import ResultPage from './ResultPage.svelte'
     import {onMount} from 'svelte'
     import {SUPPORT_CAMERA} from '../lib/store' 
     import { CameraController } from '../controller/cameraController';
+    import { Lang } from '../models/lang';
     
     let showImage = false, 
         openEditEffect = false, 
@@ -34,23 +35,24 @@
             title : "",
             content : ""
         },
-        isLoading = false,
         showErrorToLarge = false,
         result = {
             data : null,
-            show : false
+            show : false,
+            source : 'ja',
+            target : "id"
         },
         cameraController = new CameraController()
 
     onMount(async () => {
         initCanvas(true)
-		if ($SUPPORT_CAMERA.support) {
-			await startVideo(true)
-            error.show = false
-        } else {
-            if ($SUPPORT_CAMERA.support !== true) handleError("Perangkat anda tidak mendukung kamera.", "support")
-            else handleError('Akses kamera ditolak', "permission")
-        }
+        let perm = await navigator.permissions.query({ name: "camera" })
+        $SUPPORT_CAMERA.permission = perm.state
+		if ($SUPPORT_CAMERA.support && $SUPPORT_CAMERA.permission !== 'denied') {
+			await startVideo(true);
+            error.show = false;
+        } else if ($SUPPORT_CAMERA.permission === "denied"){handleError('Akses kamera ditolak', "permission")
+        } else if(!$SUPPORT_CAMERA.support) handleError("Perangkat anda tidak mendukung kamera.", "support")
 		
   	});
 
@@ -90,8 +92,8 @@
     }
 
     const takeaPicture = async () => {
-        let canvas
-        await initFx()
+        let pics = cameraController.takePicture(video)
+        await initFx(pics)
     }
 
     const startCrop = async () => {
@@ -100,24 +102,16 @@
         crop.openCrop = true
     }
     const onFileSelected =(e)=>{
-        let fileSize = e.target.files[0].size /1024/1024
-        if (fileSize <= 1) {
-            let file = e.target.files[0]
-            let reader = new FileReader();
-            reader.readAsDataURL(file);
-            reader.onload = (e) => {
-                let image = new Image()
-                image.onload = async function() {
-                    // canvas.getContext('2d').drawImage(image,0,0)
-                    texture = canvasfx.texture(image)
-                    canvasfx.draw(texture).update()
-                    canvasfx.className="object-scale-down rounded-lg max-w-full"
-                    video.parentNode.insertBefore(canvasfx, video)
-                    showImage = true
-                    cameraController.stopVideo(stream)
-                }
-                image.src = e.target.result
-            };
+        
+        if (cameraController.getSize(e.target.files[0].size) <= 1) {
+            cameraController.getImage(e.target.files[0],(h) => {
+                texture = canvasfx.texture(h)
+                canvasfx.draw(texture).update()
+                canvasfx.className="object-scale-down rounded-lg max-w-full"
+                video.parentNode.insertBefore(canvasfx, video)
+                showImage = true
+                cameraController.stopVideo(stream)
+            })
         } else {
             //do something with this error
             showErrorToLarge = true
@@ -127,11 +121,13 @@
         }
     }
 
-
     const scanDoc = async () => {
+        let lang = new Lang()
 		canvasfx.update()
 		result.data = await canvasfx.toDataURL("image/jpeg")
         result.show = true
+        result.source = lang.getSource().code
+        result.target = lang.getTarget().code
 	}
 
     const startVideo = async (first) => {
@@ -165,12 +161,15 @@
             modal.content = `
             <div class="flex flex-col px-6">
                 <ol class="list-decimal">
-                    <li>Di Ponsel, buka aplikasi setelan (Setting Apps)</li>
-                    <li>Ketuk <strong>Aplikasi</strong></li>
-                    <li>Cari dan pilih <strong>JXI Penerjemah</strong>(Jika tidak menemukannya, pilih <strong>Lihat semua aplikasi.</strong>)</li>
-                    <li>Ketuk <strong>Izin</strong></li>
-                    <li>Pilih <strong>Kamera</strong> > <strong>Izinkan saat aplikasi digunakan</strong> </li>
-                    <li>Buka Aplikasi <strong>JIX Penerjemah</strong></li>
+                    <li>Buka Google Chrome</li>
+                    <li>Ketuk icon <strong><span class="p-1 rounded bg-content-base">⋮</span></strong> di pojok kanan atas</li>
+                    <li>Pilih <strong>pengaturan</strong></li>
+                    <li>pilih <strong>pengaturan situs</strong></li>
+                    <li>pilih <strong>Kamera</strong></li>
+                    <li>pilih Tab<strong>diblokir</strong></li>
+                    <li>Cari dan pilih <strong>https://jxi.vercel.app</strong></li>
+                    <li>Ketuk <strong>Izinkan</strong></li>
+                    <li>Buka Aplikasi ulang <strong>JIX Penerjemah</strong></li>
                     <li>Selesai.</li>
                 </ol>
             </div>
@@ -198,7 +197,7 @@
         </SkeletonModal>
     {/if}
     {#if showErrorToLarge}
-    <div in:fly={{y :-200 , duration : 200}} out:fly={{y :-200 , duration : 200}} class="absolute z-10 left-0 right-0 top-20">
+    <div in:fade={{duration : 200}} out:fade={{duration : 200}} class="absolute z-10 left-0 right-0 bottom-10">
         <div class="alert shadow-lg alert-error w-max mx-auto">
             <div>
               <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current flex-shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -208,7 +207,7 @@
     </div>
     {/if}
     {#if result.show}
-        <ResultPage show={result.show} data={result.data} on:close={(e) => result.show = e.detail.show}/>
+        <ResultPage {...result} on:close={(e) => result.show = e.detail.show}/>
     {/if}
     <div class="h-[75vh] flex items-center justify-center max-w-full w-full relative">
         <!-- svelte-ignore a11y-media-has-caption -->
@@ -268,7 +267,7 @@
     <button on:click="{() => handleShowModal("example")}" in:fly={{y:200 ,duration : 300}}  class="btn btn-ghost btn-sm btn-square text-base-content">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-6 w-6"><path style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2" d="M12.05 8h-.1M3 12a9 9 0 0 1 9-9h0a9 9 0 0 1 9 9h0a9 9 0 0 1-9 9h0a9 9 0 0 1-9-9Zm9 1v3"/></svg>
     </button>
-    <button disabled={!$SUPPORT_CAMERA.support} in:fly={{y:200 ,duration : 300}} class="btn btn-circle shadow btn-primary btn-lg" on:click="{() => takeaPicture()}">
+    <button disabled={!$SUPPORT_CAMERA.support || $SUPPORT_CAMERA.permission === 'denied'} in:fly={{y:200 ,duration : 300}} class="btn btn-circle shadow btn-primary btn-lg" on:click="{() => takeaPicture()}">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" class="h-10 w-10"><path d="M21 7v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h4l.72-1.45a1 1 0 0 1 .9-.55h4.76a1 1 0 0 1 .9.55L16 6h4a1 1 0 0 1 1 1Zm-9 3a3 3 0 1 0 3 3 3 3 0 0 0-3-3Z" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/></svg>
     </button>
     <button on:click="{fileinput.click()}" in:fly={{y:200 ,duration : 300}} class="btn btn-ghost btn-sm btn-square text-base-content">
