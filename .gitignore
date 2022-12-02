@@ -4,3 +4,6 @@
 .DS_Store
 
 *.pem
+*.crt
+*.key
+

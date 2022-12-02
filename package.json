@@ -5,7 +5,7 @@
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
-    "start": "sirv public --host --http2 --key privateKey.key --cert certificate.crt"
+    "start": "sirv public"
   },
   "devDependencies": {
     "@novacbn/svelte-image-crop": "github:novacbn/svelte-image-crop#0.0.2",
