@@ -7,7 +7,7 @@ export class StoreController {
     }
     initConfig() {
         //init localStorage
-        if (!localStorage.favorites) localStorage.setItem('favorites', JSON.stringify(str))
+        if (!localStorage.favorites) localStorage.setItem('favorites', JSON.stringify([]))
     }
 
     addToLocalStorage(str) {
