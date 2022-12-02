@@ -168,7 +168,7 @@
                     </svg>
                 </button>
             </div>
-            <p class="text-base-content">{translate.translate}</p>
+            <p class="text-base-content">{@html translate.translate}</p>
         </div>
         {/if}
         {#if showAlert.open}
