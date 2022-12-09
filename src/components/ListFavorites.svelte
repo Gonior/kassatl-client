@@ -1,8 +1,14 @@
 <script>
     import {StoreController} from '../controller/storeController'
     import ResultPage from '../components/ResultPage.svelte'
+    import {onMount} from 'svelte'
+
     let storeCotroller = new StoreController()
-    let favorites = storeCotroller.getListFavorites()
+    let favorites = []
+    onMount(() => {
+        favorites = [...storeCotroller.getListFavorites()]
+    }) 
+    
     let detailContent = {
         id : "",
         data : "",
@@ -17,7 +23,7 @@
 
     const handleClose = (e) => {
         detailContent.show = e.detail.show
-        favorites = storeCotroller.getListFavorites()
+        favorites = [...storeCotroller.getListFavorites()]
     }
 
 </script>

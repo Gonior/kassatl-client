@@ -92,8 +92,10 @@
     }
 
     const takeaPicture = async () => {
+
         let pics = cameraController.takePicture(video)
         await initFx(pics)
+        resetEffect()
     }
 
     const startCrop = async () => {
@@ -111,6 +113,7 @@
                 video.parentNode.insertBefore(canvasfx, video)
                 showImage = true
                 cameraController.stopVideo(stream)
+                resetEffect()
             })
         } else {
             //do something with this error

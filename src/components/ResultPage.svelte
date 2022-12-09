@@ -169,6 +169,9 @@
                 </button>
             </div>
             <p class="text-base-content">{@html translate.translate}</p>
+            {#if source !== 'ja'}
+            <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
+            {/if}
         </div>
         {/if}
         {#if showAlert.open}
