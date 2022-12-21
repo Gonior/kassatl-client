@@ -144,7 +144,9 @@
         </div>
         <div class="flex-1 overflow-y-auto px-4 pb-10">
             <div class="flex items-center justify-between py-4">
-                <h3 class="font-bold text-base-content">{source === 'ja' ? 'Jepang' : "Indonesia"}</h3>
+                <div>
+                    <h3 class="font-bold text-base-content ">{source === 'ja' ? 'Jepang' : "Indonesia"}</h3>
+                </div>
                 <button class="btn btn-circle border-0 text-base-content btn-ghost" on:click={() => handleCopy(translate.parsedText)}>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -153,7 +155,7 @@
             </div>
             <div class="text-base-content pb-10">
                 {#if source === 'ja'}
-                <p class="text-base-content">{translate.parsedText}</p>
+                <p class="text-base-content whitespace-pre-line">{translate.parsedText}</p>
                 <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
                 {:else}
                 <p class="text-base-content">{translate.parsedText}</p>
@@ -171,7 +173,7 @@
                     </svg>
                 </button>
             </div>
-            <p class="text-base-content">{translate.translate}</p>
+            <p class="text-base-content whitespace-pre-line">{translate.translate}</p>
             {#if source !== 'ja'}
             <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
             {/if}
