@@ -7,6 +7,7 @@ export class TranslateController {
         this.err.message = ""
         this.err.code = ""
     }
+    
     async reqTranslate(image, source, target, config) {
         //axios here
         let req = await axios.post(`${BASE_URL}/upload`, {image, source, target}, config).catch(error => {

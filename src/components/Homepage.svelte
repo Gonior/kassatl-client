@@ -96,8 +96,10 @@
         let pics = cameraController.takePicture(video)
         await initFx(pics)
         resetEffect()
+
     }
 
+    
     const startCrop = async () => {
         canvasfx.update()
         crop.img = await canvasfx.toDataURL("image/jpeg")
@@ -127,7 +129,7 @@
     const scanDoc = async () => {
         let lang = new Lang()
 		canvasfx.update()
-		result.data = await canvasfx.toDataURL("image/jpeg")
+		result.data = await canvasfx.toDataURL("image/jpeg", 1)
         result.show = true
         result.source = lang.getSource().code
         result.target = lang.getTarget().code

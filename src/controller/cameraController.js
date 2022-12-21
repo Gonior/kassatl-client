@@ -29,6 +29,9 @@ export class CameraController {
         return canvas
     }
 
+
+    
+
     stopVideo(stream) {
         try {
             stream.getTracks().forEach(function(track) {

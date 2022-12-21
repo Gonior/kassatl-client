@@ -75,7 +75,7 @@
 </script>
 
 {#if openCrop}
-<div class="absolute inset-0 z-10 h-full bg-base-100" in:fly={{y : 100,duration : 100}} >
+<div class="absolute inset-0 z-10 h-full bg-base-100 max-w-md w-full mx-auto" in:fly={{y : 100,duration : 100}} >
     <div class="p-2">
         <div class="w-full flex justify-between items-center h-[10vh]">
             <div class="flex items-center space-x-2">
