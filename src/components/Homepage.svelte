@@ -138,7 +138,8 @@
     const startVideo = async (first) => {
 		
         if ($SUPPORT_CAMERA.support) {
-            video.srcObject = await cameraController.startVideo()
+            stream = await cameraController.startVideo()
+            video.srcObject = stream
             initCanvas(first)
         } else initCanvas(false)
 
