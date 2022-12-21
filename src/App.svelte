@@ -82,5 +82,9 @@
 		}
 
 	}
+
+	img {
+		max-height: 80vh;
+	}
 	
 </style>
