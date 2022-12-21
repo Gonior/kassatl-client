@@ -67,7 +67,7 @@
 		setTimeout(async () => {
 			texture = canvasfx.texture(e.detail.img)
 			canvasfx.draw(texture).update()
-			canvasfx.className="object-scale-down max-w-full rounded-lg"
+			canvasfx.className="object-scale-down max-w-full max-h-[75vh] rounded-lg"
 			video.parentNode.insertBefore(canvasfx, video)
 			showImage = true
 			cameraController.stopVideo(stream)
@@ -111,7 +111,7 @@
             cameraController.getImage(e.target.files[0],(h) => {
                 texture = canvasfx.texture(h)
                 canvasfx.draw(texture).update()
-                canvasfx.className="object-scale-down rounded-lg max-w-full"
+                canvasfx.className="object-scale-down rounded-lg max-h-[75vh] max-w-full"
                 video.parentNode.insertBefore(canvasfx, video)
                 showImage = true
                 cameraController.stopVideo(stream)

@@ -90,7 +90,7 @@
             </button>
         </div>
         <div class="relative h-[80vh] flex items-center justify-center">
-            <div class="rounded-lg object-scale-down">
+            <div class="rounded-lg object-scale-down max-h-[80vh]">
                 <ImageCrop bind:this={image_crop} {src} on:state={on_state} />
             </div>
         </div>
