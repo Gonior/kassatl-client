@@ -155,7 +155,7 @@
             </div>
             <div class="text-base-content pb-10">
                 {#if source === 'ja'}
-                <p class="text-base-content whitespace-pre-line " >{translate.furigana} </p>
+                <p class="text-base-content whitespace-pre-line" >{@html translate.furigana} </p>
                 <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
                 {:else}
                 <p class="text-base-content">{translate.parsedText}</p>
