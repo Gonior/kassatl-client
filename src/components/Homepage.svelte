@@ -129,7 +129,7 @@
     const scanDoc = async () => {
         let lang = new Lang()
 		canvasfx.update()
-		result.data = await canvasfx.toDataURL("image/jpeg", 1)
+		result.data = await canvasfx.toDataURL("image/jpeg", 0.8)
         result.show = true
         result.source = lang.getSource().code
         result.target = lang.getTarget().code
