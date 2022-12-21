@@ -155,7 +155,7 @@
             </div>
             <div class="text-base-content pb-10">
                 {#if source === 'ja'}
-                <p class="text-base-content whitespace-pre-line">{translate.parsedText}</p>
+                <textarea class="text-base-content whitespace-pre-line border-0 p-2">{translate.parsedText}</textarea>
                 <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
                 {:else}
                 <p class="text-base-content">{translate.parsedText}</p>
