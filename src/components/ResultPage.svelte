@@ -171,7 +171,7 @@
                     </svg>
                 </button>
             </div>
-            <p class="text-base-content">{@html translate.translate}</p>
+            <p class="text-base-content">{translate.translate}</p>
             {#if source !== 'ja'}
             <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
             {/if}
