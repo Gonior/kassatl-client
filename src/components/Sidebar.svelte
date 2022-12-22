@@ -57,7 +57,7 @@
     </SkeletonModal>
 {/if}
 
-<div class="p-4 overflow-y-hidden justify-between flex w-2/3 lg:w-52 bg-base-100 text-base-content flex-col">
+<div class="p-4 overflow-y-hidden justify-between flex w-2/3 lg:w-64 bg-base-100 text-base-content flex-col">
     <!-- Sidebar content here -->
     <div class="w-full mt-2 mb-4 flex items-center space-x-2">
         <img src="favicon.png" class="h-10 w-10 object-cover" alt="Logo JXI Translator">

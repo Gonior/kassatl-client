@@ -8,9 +8,9 @@ export class TranslateController {
         this.err.code = ""
     }
     
-    async reqTranslate(image, source, target, config) {
+    async reqTranslate(image, source, target, config, endpoint) {
         //axios here
-        let req = await axios.post(`${BASE_URL}/upload`, {image, source, target}, config).catch(error => {
+        let req = await axios.post(`${BASE_URL}/${endpoint}`, {image, source, target}, config).catch(error => {
             this.err.isError = true
             if (error.response) {
                 // The request was made and the server responded with a status code

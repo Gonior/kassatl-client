@@ -33,7 +33,7 @@
    <!--Dynamic content here, Homepage (default), ResultPage, and Favorite page-->
    <svelte:component this={selected.component} />
 </div>
-<div class="drawer-side">
+<div class="drawer-side ">
     <label for="my-drawer" class="drawer-overlay"></label>
     <Sidebar on:opt={(e) => handlePage(e)}/>
 </div>

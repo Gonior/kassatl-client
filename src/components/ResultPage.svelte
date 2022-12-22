@@ -18,9 +18,14 @@
         state = "",
         theme = "",
         err = {},
+        textarea,
         translateModel = new TranslateModel(),
         storeController = new StoreController(),
         translate,
+        oldText,
+        isLoadingRefresh = false,
+        furigana = true,
+        heightContent =0,
         showAlert = {
             open : false,
             message : false
@@ -43,7 +48,7 @@
         // console.log({source,target})
         if (id !== "") {
             translate = storeController.getDetailFavorites(id)
-            console.log(translate)
+            
 
             source = translate.source.code
             target = translate.target.code
@@ -63,10 +68,11 @@
             }
         }
         // console.log({source,target})
-        await translateModel.getTranslate(data,source,target,config)
+        await translateModel.getTranslate(data,source,target,config,'upload')
         translate = translateModel.getProperty()
         err = {...translateModel.getError()}
-        
+        oldText = translate.parsedText
+
         isLoading = false
     }
 
@@ -91,6 +97,15 @@
         storeController.copyToClipboard(text, () => handleShowAlert('teks berhasil disalin'))
     }
 
+    const handleRefresh = async () => {
+        isLoadingRefresh = true
+        await translateModel.getTranslate(translate.parsedText,source,target,function(){}, 'translate')
+        translate = translateModel.getProperty()
+        err = {...translateModel.getError()}
+        oldText = translate.parsedText
+        isLoadingRefresh = false
+    }
+
     const handleShowAlert = (message) => {
         showAlert.open = true
         showAlert.message = message
@@ -100,8 +115,17 @@
         },2000)
     }
 
+    const furiganaMode = () => {
+        furigana = !furigana
+        
+    }
     
-    
+    function textAreaAdjust(element) {
+		
+        element.style.height = "1px";
+        
+        element.style.height = (25+element.scrollHeight)+"px";
+    }
 
 </script>
 
@@ -136,27 +160,43 @@
                 </button>
                 <h1 class="text-xl font-semibold tracking-tighter font-sans text-base-content">Hasil Terjemahan</h1>
             </div>
-            <button class="btn btn-circle btn-ghost border-0 text-warning {favorite ? 'fill-warning' : 'fill-transparent'}" on:click={() => addRemoveToFavorite()}>
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                </svg>
-            </button>
-        </div>
-        <div class="flex-1 overflow-y-auto px-4 pb-10">
-            <div class="flex items-center justify-between py-4">
-                <div>
-                    <h3 class="font-bold text-base-content ">{source === 'ja' ? 'Jepang' : "Indonesia"}</h3>
-                </div>
-                <button class="btn btn-circle border-0 text-base-content btn-ghost" on:click={() => handleCopy(translate.parsedText)}>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+            <div class="flex space-x-1 items-center">
+                {#if oldText !== translate.parsedText}
+                    <button class="btn btn-circle btn-ghost text-base-content border-0 {isLoadingRefresh ? 'loading' : ''}" on:click={() => handleRefresh()} >
+                        {#if !isLoadingRefresh}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24"><path d="m12 16 2 2-2 2" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/><path d="M6 6H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h10M12 8l-2-2 2-2" data-name="primary" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/><path d="M18 18h2a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H10" data-name="primary" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/></svg>
+                        {:else}{''}
+                        {/if}
+                    </button>
+                {/if}
+                <button class="btn btn-circle btn-ghost border-0 text-warning {favorite ? 'fill-warning' : 'fill-transparent'}" on:click={() => addRemoveToFavorite()}>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" fill="">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                     </svg>
                 </button>
             </div>
+        </div>
+        <div class="flex-1 overflow-y-auto px-4 pb-10">
+            <div class="flex items-center justify-between py-4">
+                <h3 class="font-bold text-base-content ">{source === 'ja' ? 'Jepang' : "Indonesia"}</h3>
+                <div class="flex space-x-1 items-center">
+                    <button class="btn btn-ghost rounded-lg text-base-content btn-xs lowercase" on:click={() => furiganaMode()}>{furigana ? "raw": "furigana"}</button>
+                    
+                    <button class="btn btn-circle border-0 text-base-content btn-ghost" on:click={() => handleCopy(translate.parsedText)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
             <div class="text-base-content pb-10">
                 {#if source === 'ja'}
-                <p class="text-base-content whitespace-pre-line" >{@html translate.furigana} </p>
-                <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
+                    {#if furigana}
+                    <p class="text-base-content whitespace-pre-line" >{@html translate.furigana}</p>
+                    {:else}
+                    <textarea class="focus:outline-none focus:border-0 text-base-content bg-transparent resize-none w-full h-[20vh]" on:keyup={() => textAreaAdjust(textarea)} bind:value={translate.parsedText} bind:this={textarea}></textarea>
+                    {/if}
+                    <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
                 {:else}
                 <p class="text-base-content">{translate.parsedText}</p>
 

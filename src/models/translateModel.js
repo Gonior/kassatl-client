@@ -8,10 +8,10 @@ export class TranslateModel extends TranslateController {
         super()
         
     }
-    async getTranslate(image, source, target, config) {    
+    async getTranslate(image, source, target, config, endpoint) {    
         try {
             
-            let data = await this.reqTranslate(image, source, target, config)
+            let data = await this.reqTranslate(image, source, target, config, endpoint)
             
             this.parsedText = data.parsedText,
             this.furigana = data.furigana,
