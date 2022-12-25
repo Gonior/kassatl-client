@@ -3,8 +3,8 @@
     "relation": ["delegate_permission/common.handle_all_urls"],
     "target": {
       "namespace": "android_app",
-      "package_name": "xyz.appmaker.tndvfk",
-      "sha256_cert_fingerprints": ["3B:D7:39:82:19:85:12:46:1A:06:2C:8F:96:D1:D0:A0:2B:F1:60:65:A0:7E:9F:69:F0:1A:E3:DE:89:62:0C:47"]
+      "package_name": "app.vercel.kassatl_client_81f1.twa",
+      "sha256_cert_fingerprints": ["B5:D4:1F:F2:F8:DC:FD:A1:52:A7:ED:14:06:05:D1:FA:52:83:92:B0:79:B2:14:CE:D9:AB:40:1A:34:9B:E3:3B"]
     }
   }
 ]
