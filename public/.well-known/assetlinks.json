@@ -4,7 +4,8 @@
     "target": {
       "namespace": "android_app",
       "package_name": "app.vercel.kassatl_client_81f1.twa",
-      "sha256_cert_fingerprints": ["E3:AD:6B:57:6E:0D:D5:0B:EE:17:55:F9:35:5C:5A:6A:C0:69:24:8E:B8:18:96:A2:61:6A:98:B0:FB:30:90:4B"]
+      "sha256_cert_fingerprints":
+        ["63:D6:82:39:2C:74:AC:AE:7F:20:18:84:31:8A:BB:76:06:FD:6C:0D:07:9F:D1:85:AF:71:15:62:B4:76:9B:9B"]
     }
   }
 ]
