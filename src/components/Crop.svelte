@@ -96,9 +96,9 @@
         </div>
 
         <div class="h-[10vh]">
-            <h1 class="text-xs text-gray-400 text-center w-full">Sorot teks yang akan dipangkas</h1>
+            <h1 class="text-xs text-base-content text-opacity-40 text-center w-full">Sorot teks yang akan dipangkas</h1>
             <div class="flex flex-0 justify-between items-center">
-                <button class="btn btn-ghost" disabled={state === CROP_STATE.default} on:click={on_reset_click}>reset</button>
+                <button class="btn btn-ghost text-base-content" disabled={state === CROP_STATE.default} on:click={on_reset_click}>reset</button>
                 <button class="btn btn-secondary" disabled={state === CROP_STATE.default} on:click={on_commit_click}>Pangkas</button>
             </div>
         </div>

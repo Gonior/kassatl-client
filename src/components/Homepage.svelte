@@ -233,7 +233,7 @@
     <div class="h-[75vh] flex items-center justify-center max-w-full w-full relative">
         
         {#if source === "id"}
-            <button class="btn btn-xs shadow btn-ghost  absolute top-0 mx-auto inline-flex space-x-1" on:click={() => handleEntryMode()}>
+            <button class="btn btn-xs shadow btn-ghost  absolute top-0 mx-auto inline-flex space-x-1 text-base-content" on:click={() => handleEntryMode()}>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"><path d="M19.88 7 11 15.83 7 17l1.17-4 8.88-8.88A2.09 2.09 0 0 1 20 4a2.09 2.09 0 0 1-.12 3ZM21 21H3" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/></svg>
                 <span>Masukan teks</span>
             </button>
@@ -286,7 +286,7 @@
             </button>
         </div>
         {:else} 
-        <h1 class="text-xs text-gray-400 text-center w-full {!$SUPPORT_CAMERA.support || $SUPPORT_CAMERA.permission === 'denied' ? 'hidden' : ''}">Ambil gambar yang mengadung Jepang</h1>
+        <h1 class="text-xs text-gray-400 text-center w-full {!$SUPPORT_CAMERA.support || $SUPPORT_CAMERA.permission === 'denied' ? 'hidden' : ''}">Ambil gambar yang mengadung bahasa {source === "id" ? "Indonesia" : "Jepang"}</h1>
         {/if}
     </div>
 </div>
