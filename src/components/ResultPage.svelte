@@ -12,6 +12,7 @@
     export let source
     export let target
     export let id = ""
+    export let entryMode = false
 
 
     let isLoading = true,
@@ -21,7 +22,11 @@
         textarea,
         translateModel = new TranslateModel(),
         storeController = new StoreController(),
-        translate,
+        translate = {
+            parsedText : "",
+            translate : "",
+            romanji : ""
+        },
         oldText,
         isLoadingRefresh = false,
         furigana = true,
@@ -46,10 +51,17 @@
         })
         theme = document.getElementsByTagName('html')[0].getAttribute('data-theme')
         // console.log({source,target})
-        if (id !== "") {
-            translate = storeController.getDetailFavorites(id)
-            
+        if (entryMode) { 
+            isLoading = false
+            furigana = true
+            oldText = ""
 
+            translate.parsedText = ""
+            translate.translate = ""
+            translate.romanji = ""
+
+        } else if (id !== "") {
+            translate = storeController.getDetailFavorites(id)
             source = translate.source.code
             target = translate.target.code
             isLoading = false
@@ -180,7 +192,9 @@
             <div class="flex items-center justify-between py-4">
                 <h3 class="font-bold text-base-content ">{source === 'ja' ? 'Jepang' : "Indonesia"}</h3>
                 <div class="flex space-x-1 items-center">
-                    <button class="btn btn-ghost rounded-lg text-base-content btn-xs lowercase" on:click={() => furiganaMode()}>{furigana ? "raw": "furigana"}</button>
+                    {#if source === "ja"}
+                        <button class="btn btn-ghost rounded-lg text-base-content btn-xs lowercase" on:click={() => furiganaMode()}>{furigana ? "raw": "furigana"}</button>
+                    {/if}
                     
                     <button class="btn btn-circle border-0 text-base-content btn-ghost" on:click={() => handleCopy(translate.parsedText)}>
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -198,7 +212,12 @@
                     {/if}
                     <p class="text-base-content my-2 text-xs font-semibold">{translate.romanji}</p>
                 {:else}
-                <p class="text-base-content">{translate.parsedText}</p>
+                {#if entryMode}
+                    <textarea placeholder="Masukan text yang akan diterjemahkan" class="focus:outline-none focus:border-0 text-base-content bg-transparent resize-none w-full h-[20vh]" on:keyup={() => textAreaAdjust(textarea)} bind:value={translate.parsedText} bind:this={textarea}></textarea>
+                {:else}
+                <textarea placeholder="Masukan text yang akan diterjemahkan" class="focus:outline-none focus:border-0 text-base-content bg-transparent resize-none w-full h-[20vh]" on:keyup={() => textAreaAdjust(textarea)} bind:value={translate.parsedText} bind:this={textarea}></textarea>
+                    <!-- <p class="text-base-content">{translate.parsedText}</p> -->
+                {/if}
 
                 {/if}
             </div>

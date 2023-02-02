@@ -1,5 +1,7 @@
 <script>
+    import { createEventDispatcher } from 'svelte';
     import {Lang} from '../models/lang'
+    const dispatch = createEventDispatcher()
 
     export let optNum 
     const lang = new Lang()
@@ -10,7 +12,10 @@
         lang.switchLang()
         source = lang.getSource()
         target = lang.getTarget()
+        dispatch('switchLang',{source})
     }
+
+    
     
 </script>
 

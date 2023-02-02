@@ -11,6 +11,7 @@
     import { CameraController } from '../controller/cameraController';
     import { Lang } from '../models/lang';
     
+    export let source
     let showImage = false, 
         openEditEffect = false, 
         fileinput,
@@ -40,11 +41,14 @@
             data : null,
             show : false,
             source : 'ja',
-            target : "id"
+            target : "id",
+            entryMode : false
         },
         cameraController = new CameraController()
-
+    
     onMount(async () => {
+        source = new Lang().getSource().code
+        
         initCanvas(true)
         let perm = await navigator.permissions.query({ name: "camera" })
         $SUPPORT_CAMERA.permission = perm.state
@@ -125,7 +129,7 @@
             },3000)
         }
     }
-
+    
     const scanDoc = async () => {
         let lang = new Lang()
 		canvasfx.update()
@@ -133,6 +137,7 @@
         result.show = true
         result.source = lang.getSource().code
         result.target = lang.getTarget().code
+        result.entryMode = false
 	}
 
     const startVideo = async (first) => {
@@ -149,6 +154,15 @@
 
     const initCanvas = (first) => {
         first ? canvasfx = fx.canvas() : video.parentNode.removeChild(canvasfx)
+    }
+
+    const handleEntryMode = () => {
+        let lang = new Lang()
+        result.show = true
+        result.data = ""
+        result.source = lang.getSource().code
+        result.target = lang.getTarget().code
+        result.entryMode = true
     }
 
     const initFx = async (element) => {
@@ -191,6 +205,7 @@
             `
         }
     }
+    
 </script>
 
 <div class="h-[80vh]">
@@ -216,6 +231,13 @@
         <ResultPage {...result} on:close={(e) => result.show = e.detail.show}/>
     {/if}
     <div class="h-[75vh] flex items-center justify-center max-w-full w-full relative">
+        
+        {#if source === "id"}
+            <button class="btn btn-xs shadow btn-ghost  absolute top-0 mx-auto inline-flex space-x-1" on:click={() => handleEntryMode()}>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24"><path d="M19.88 7 11 15.83 7 17l1.17-4 8.88-8.88A2.09 2.09 0 0 1 20 4a2.09 2.09 0 0 1-.12 3ZM21 21H3" style="fill:none;stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:2"/></svg>
+                <span>Masukan teks</span>
+            </button>
+        {/if}
         <!-- svelte-ignore a11y-media-has-caption -->
         <video class="{showImage || error.show ? 'hidden' : ''} object-scale-down rounded-lg max-w-full" bind:this={video} autoplay></video>
         {#if error.show}
@@ -264,7 +286,7 @@
             </button>
         </div>
         {:else} 
-        <h1 class="text-xs text-gray-400 text-center w-full {!$SUPPORT_CAMERA.permission ? 'hidden' : ''}">Ambil gambar yang mengadung Bahasa Jepang</h1>
+        <h1 class="text-xs text-gray-400 text-center w-full {!$SUPPORT_CAMERA.support || $SUPPORT_CAMERA.permission === 'denied' ? 'hidden' : ''}">Ambil gambar yang mengadung Jepang</h1>
         {/if}
     </div>
 </div>

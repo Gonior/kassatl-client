@@ -12,13 +12,14 @@
     let detailContent = {
         id : "",
         data : "",
-
+        entryMode: false,
         show : false
     }
     
     const handleGetDetail = (kk) => {
         detailContent.id = kk
         detailContent.show = true
+        entryMode = false
     }
 
     const handleClose = (e) => {
